@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Care - 다문화 건강·의료 맞춤형 지원 센터</title>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #10b981;
+            --text-color: #1e293b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-container {
+            max-width: 1000px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-selectors {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .lang-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .lang-btn.active, .lang-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .main-wrapper {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+        .hero-section {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 30px;
+            border-radius: 16px;
+        }
+        .hero-section h1 { margin-top: 0; color: #1e3a8a; font-size: 26px; }
+        .hero-section p { color: #475569; font-size: 16px; margin-bottom: 0;}
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+        
+        .q-group {
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+        }
+        /* 미선택 시 빨간 테두리 표시용 클래스 */
+        .q-group.error {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .q-title { font-weight: 600; margin-bottom: 10px; font-size: 16px; }
+        .opt-group { display: flex; gap: 15px; flex-wrap: wrap; }
+        .opt-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 15px; }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-primary:hover { background-color: #2563eb; }
+
+        .center-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+        .center-card {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+            transition: transform 0.2s;
+        }
+        .center-card:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+        .center-name { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #1e3a8a;}
+        .center-info { font-size: 14px; color: #64748b; margin-bottom: 5px; }
+        .center-link { display: inline-block; margin-top: 8px; font-size: 14px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+
+        #resultBox {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <div class="logo">🌐 Global Care</div>
+        <div class="lang-selectors">
+            <button class="lang-btn active" onclick="changeLang('ko', this)">한국어</button>
+            <button class="lang-btn" onclick="changeLang('vi', this)">Tiếng Việt</button>
+            <button class="lang-btn" onclick="changeLang('zh', this)">中文</button>
+            <button class="lang-btn" onclick="changeLang('th', this)">ภาษาไทย</button>
+            <button class="lang-btn" onclick="changeLang('ru', this)">Русский</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-wrapper">
+    <div class="hero-section">
+        <h1 id="txt-hero-title">다문화 가족 맞춤형 건강·의료 도우미</h1>
+        <p id="txt-hero-desc">언어 장벽 없이 편리하게 간이 건강 점검을 하시고 지원 센터 정보를 확인하세요.</p>
+    </div>
+
+    <!-- 1. 간이 자가진단 테스트 -->
+    <div class="card">
+        <h2 class="card-title">🩺 <span id="txt-card1-title">간단 건강 자가진단</span></h2>
+        <div id="quiz-container"></div>
+        <button type="button" class="btn btn-primary" id="btn-quiz" onclick="checkHealth()">진단 결과 확인</button>
+        <div id="resultBox"></div>
+    </div>
+
+    <!-- 2. 센터 연계 -->
+    <div class="card">
+        <h2 class="card-title">🏢 <span id="txt-card2-title">다문화가족지원센터 연계 안내</span></h2>
+        <p id="txt-center-desc" style="font-size:15px; color:#475569; margin-bottom:20px;">언어 통역 지원, 병원 동행, 비자 서류 및 생활 상담이 필요하시면 아래 통합 센터로 문의하십시오.</p>
+        
+        <div class="center-list">
+            <div class="center-card">
+                <div class="center-name">한국다문화가족지원센터</div>
+                <div class="center-info">📞 Tel: 02-123-4567</div>
+                <div class="center-info">📍 address: 서울시 중구 행복로 12</div>
+                <a href="https://www.liveinkorea.kr" target="_blank" class="center-link">🌐 홈페이지 방문 →</a>
+            </div>
+            <div class="center-card">
+                <div class="center-name">음성군다문화가족지원센터 Eumseong-gun Multicultural Family Support Center</div>
+                <div class="center-info">📞 Tel: 043-873-3800</div>
+                <div class="center-info">📍 address: 충청북도 음성군 음성읍 읍내리 103</div>
+                <a href="https://www.familynet.or.kr" target="_blank" class="center-link">🌐 홈페이지 방문 →</a>
+            </div>
+            <div class="center-card">
+                <div class="center-name">한국건강가정진흥원 Korea Institute for Healthy Family</div>
+                <div class="center-info">📞 Tel: 1577-9337</div>
+                <div class="center-info">📍 address: 서울시 마포구 합정동</div>
+                <a href="https://www.kihf.or.kr" target="_blank" class="center-link">🌐 홈페이지 방문 →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const langPack = {
+    ko: {
+        heroTitle: "다문화 가족 맞춤형 건강·의료 도우미",
+        heroDesc: "언어 장벽 없이 편리하게 간이 건강 점검을 하시고 지원 센터 정보를 확인하세요.",
+        card1Title: "간단 건강 자가진단",
+        card2Title: "다문화가족지원센터 연계 안내",
+        centerDesc: "언어 통역 지원, 병원 동행, 비자 서류 및 생활 상담이 필요하시면 아래 통합 센터로 문의하십시오.",
+        btnQuiz: "진단 결과 확인",
+        msgAlertQuiz: "모든 질문에 답해 주세요!",
+        msgResultGood: "😊 종합 의견: 현재 자가진단 상 큰 이상 징후는 발견되지 않았습니다. 건강 유지를 위해 정기 검진을 받아보세요.",
+        msgResultCheck: "⚠️ 종합 의견: 신체에 불편감이 감지됩니다. 가까운 병원을 방문하시거나 아래 다문화가족지원센터에 도움을 요청해 보세요.",
+        questions: [
+            { q: "1. 최근 3일 동안 몸에 열이 나거나 심한 기침 증상이 있습니까?", o: ["없다", "약간 있다", "심하다"] },
+            { q: "2. 현재 일상생활을 하기에 관절이나 허리 통증이 심합니까?", o: ["없다", "참을만하다", "매우 심하다"] },
+            { q: "3. 최근 소화가 잘 안 되거나 만성적인 두통에 시달리고 계십니까?", o: ["그렇지 않다", "가끔 그렇다", "자주 그렇다"] }
+        ]
+    },
+    vi: {
+        heroTitle: "Trợ lý Y tế & Sức khỏe Đa văn hóa",
+        heroDesc: "Dễ dàng kiểm tra sức khỏe và tìm thông tin trung tâm hỗ trợ mà không có rào cản ngôn ngữ.",
+        card1Title: "Tự chẩn đoán sức khỏe",
+        card2Title: "Hướng dẫn Liên kết Trung tâm Hỗ trợ",
+        centerDesc: "Nếu bạn cần thông dịch, người đi cùng đến bệnh viện hoặc tư vấn đời sống, vui lòng liên hệ các trung tâm dưới đây.",
+        btnQuiz: "Xem kết quả",
+        msgAlertQuiz: "Vui lòng trả lời tất cả các câu hỏi!",
+        msgResultGood: "😊 Ý kiến tổng hợp: Không phát hiện dấu hiệu bất thường. Hãy duy trì thói quen kiểm tra định kỳ.",
+        msgResultCheck: "⚠️ Ý kiến tổng hợp: Có cảm giác khó chịu. Vui lòng đến bệnh viện gần nhất hoặc liên hệ trung tâm hỗ trợ bên dưới.",
+        questions: [
+            { q: "1. Trong 3 ngày gần đây bạn có bị sốt hoặc ho nặng không?", o: ["Không", "Một chút", "Nhiều"] },
+            { q: "2. Hiện tại bạn có bị đau cơ xương khớp cản trở sinh hoạt không?", o: ["Không", "Chịu được", "Rất đau"] },
+            { q: "3. Gần đây bạn có bị khó tiêu hoặc đau đầu mãn tính không?", o: ["Không", "Thỉnh thoảng", "Thường xuyên"] }
+        ]
+    },
+    zh: {
+        heroTitle: "多文化家庭健康与医疗助手",
+        heroDesc: "跨越语言障碍，轻松进行简易健康检查并查看支援中心信息。",
+        card1Title: "简易健康自测",
+        card2Title: "多文化家庭支援中心联络指南",
+        centerDesc: "如果您需要语言翻译支持、医院陪同或生活咨询，请联系以下综合中心。",
+        btnQuiz: "查看诊断结果",
+        msgAlertQuiz: "请回答所有问题！",
+        msgResultGood: "😊 综合意见：目前未发现明显异常。请保持良好的定期体检习惯。",
+        msgResultCheck: "⚠️ 综合意见：身体感到不适。建议前往附近的医院就诊，或联系下方的多文化家庭支援中心寻求帮助。",
+        questions: [
+            { q: "1. 过去3天内您是否有发热或严重咳嗽的症状？", o: ["没有", "有一点", "很严重"] },
+            { q: "2. 目前您是否有影响日常生活的关节、腰部疼痛？", o: ["没有", "可以忍受", "非常严重"] },
+            { q: "3. 最近您是否经常消化不良或遭受慢性头痛的困扰？", o: ["没有", "偶尔会", "经常如此"] }
+        ]
+    },
+    th: {
+        heroTitle: "ผู้ช่วยดูแลสุขภาพเพื่อครอบครัวพหุวัฒนธรรม",
+        heroDesc: "ตรวจเช็คสุขภาพเบื้องต้นและดูข้อมูลศูนย์สนับสนุนได้โดยไม่มีกำแพงภาษา",
+        card1Title: "แบบประเมินสุขภาพเบื้องต้น",
+        card2Title: "ศูนย์สนับสนุนครอบครัวพหุวัฒนธรรม",
+        centerDesc: "หากคุณต้องการล่ามแปลภาษา, ผู้ติดตามไปโรงพยาบาล หรือการปรึกษาด้านการใช้ชีวิต โปรดติดต่อศูนย์บริการด้านล่าง",
+        btnQuiz: "ตรวจผลการประเมิน",
+        msgAlertQuiz: "กรุณาตอบคำถามให้ครบทุกข้อ!",
+        msgResultGood: "😊 ความเห็นโดยรวม: ไม่พบสัญญาณความผิดปกติร้ายแรง ควรตรวจสุขภาพประจำปีอย่างสม่ำเสมอ",
+        msgResultCheck: "⚠️ ความเห็นโดยรวม: พบอาการไม่สบายตัว แนะนำให้ไปพบแพทย์ใกล้บ้านหรือติดต่อศูนย์สนับสนุนด้านล่าง",
+        questions: [
+            { q: "1. ในช่วง 3 วันที่ผ่านมา คุณมีอาการไข้หรือไออย่างรุนแรงหรือไม่?", o: ["ไม่มี", "มีเล็กน้อย", "มีอาการรุนแรง"] },
+            { q: "2. ในปัจจุบัน คุณมีอาการปวดกล้ามเนื้อและกระดูกที่กระทบต่อชีวิตประจำวันหรือไม่?", o: ["ไม่มี", "ทนได้", "ปวดรุนแรงมาก"] },
+            { q: "3. ช่วงนี้คุณมีอาการอาหารไม่ย่อยหรือปวดศีรษะเรื้อรังบ้างหรือไม่?", o: ["ไม่เป็น", "เป็นบางครั้ง", "เป็นบ่อยครั้ง"] }
+        ]
+    },
+    ru: {
+        heroTitle: "Медицинский помощник для мультикультурных семей",
+        heroDesc: "Пройдите простой тест здоровья и найдите информацию о центрах поддержки без языковых барьеров.",
+        card1Title: "Простая самодиагностика",
+        card2Title: "Центры поддержки мультикультурных семей",
+        centerDesc: "Если вам нужна языковая поддержка, сопровождение в больницу или консультация, обратитесь в центры ниже.",
+        btnQuiz: "Посмотреть результат",
+        msgAlertQuiz: "Пожалуйста, ответьте на все вопросы!",
+        msgResultGood: "😊 Заключение: Серьезных отклонений не обнаружено. Рекомендуется проходить регулярные осмотры.",
+        msgResultCheck: "⚠️ Заключение: Обнаружены симптомы. Рекомендуется посетить ближайшую больницу или обратиться в центр поддержки ниже.",
+        questions: [
+            { q: "1. Был ли у вас жар или сильный кашель за последние 3 дня?", o: ["Нет", "Немного", "Сильный"] },
+            { q: "2. Испытываете ли вы сильную боль в суставах или спине?", o: ["Нет", "Терпимо", "Очень сильно"] },
+            { q: "3. Страдаете ли вы в последнее время от несварения желудка?", o: ["Нет", "Иногда", "Часто"] }
+        ]
+    }
+};
+
+let currentLang = 'ko';
+
+function changeLang(lang, element) {
+    currentLang = lang;
+    
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    if(element) element.classList.add('active');
+
+    const p = langPack[lang];
+
+    document.getElementById('txt-hero-title').innerText = p.heroTitle;
+    document.getElementById('txt-hero-desc').innerText = p.heroDesc;
+    document.getElementById('txt-card1-title').innerText = p.card1Title;
+    document.getElementById('txt-card2-title').innerText = p.card2Title;
+    document.getElementById('txt-center-desc').innerText = p.centerDesc;
+    document.getElementById('btn-quiz').innerText = p.btnQuiz;
+
+    renderQuiz();
+    document.getElementById('resultBox').style.display = 'none';
+}
+
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = "";
+    
+    langPack[currentLang].questions.forEach((item, qIdx) => {
+        let html = `<div class="q-group" id="q-group-${qIdx}"><div class="q-title">${item.q}</div><div class="opt-group">`;
+        item.o.forEach((opt, oIdx) => {
+            html += `<label><input type="radio" name="q${qIdx}" value="${oIdx}"> ${opt}</label>`;
+        });
+        html += `</div></div>`;
+        container.innerHTML += html;
+    });
+}
+
+function checkHealth() {
+    const p = langPack[currentLang];
+    let totalScore = 0;
+    let isComplete = true;
+
+    document.querySelectorAll('.q-group').forEach(el => el.classList.remove('error'));
+
+    p.questions.forEach((_, i) => {
+        let checked = document.querySelector(`input[name="q${i}"]:checked`);
+        if (checked) {
+            totalScore += parseInt(checked.value);
+        } else {
+            isComplete = false;
+            document.getElementById(`q-group-${i}`).classList.add('error');
+        }
+    });
+
+    if (!isComplete) {
+        alert(p.msgAlertQuiz);
+        return;
+    }
+
+    const resBox = document.getElementById('resultBox');
+    resBox.style.display = 'block';
+    
+    if (totalScore <= 1) {
+        resBox.innerHTML = `<strong>${p.msgResultGood}</strong>`;
+        resBox.style.backgroundColor = "#ecfdf5";
+        resBox.style.borderColor = "#10b981";
+        resBox.style.color = "#065f46";
+    } else {
+        resBox.innerHTML = `<strong>${p.msgResultCheck}</strong>`;
+        resBox.style.backgroundColor = "#fffbeb";
+        resBox.style.borderColor = "#f59e0b";
+        resBox.style.color = "#92400e";
+    }
+
+    resBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+window.onload = function() {
+    renderQuiz();
+};
+</script>
+</body>
+</html>
